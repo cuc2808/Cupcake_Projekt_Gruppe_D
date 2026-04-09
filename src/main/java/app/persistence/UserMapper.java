@@ -1,6 +1,7 @@
 package app.persistence;
 
 
+import app.entities.User;
 import app.exceptions.DatabaseException;
 
 import java.sql.Connection;
@@ -34,7 +35,7 @@ public class UserMapper {
         }
     }
 
-    public static void createUser(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
+    public static User createUser(String username, String password, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "INSERT INTO users (username, password) VALUES(?,?)";
 
         try
@@ -45,6 +46,7 @@ public class UserMapper {
             ps.setString(1, username);
             ps.setString(2, password);
             ps.executeUpdate();
+            return login(username,password,connectionPool);
         } catch (SQLException e) {
             throw new DatabaseException("Error with createUser", e.getMessage());
         }
