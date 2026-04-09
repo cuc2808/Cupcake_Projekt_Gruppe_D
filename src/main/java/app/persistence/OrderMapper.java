@@ -16,7 +16,7 @@ public class OrderMapper {
 
     public static List<Top> getAllTops(ConnectionPool connectionPool) throws DatabaseException {
         List<Top> topList = new ArrayList<>();
-        String sql = "SELECT * FROM top";
+        String sql = "SELECT * FROM tops";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -35,7 +35,7 @@ public class OrderMapper {
 
     public static List<Bottom> getAllBottoms(ConnectionPool connectionPool) throws DatabaseException {
         List<Bottom> bottomList = new ArrayList<>();
-        String sql = "SELECT * FROM bottom";
+        String sql = "SELECT * FROM bottoms";
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
