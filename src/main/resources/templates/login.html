@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loginpage</title>
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="navigation">
+    <div>
+        <ul>
+            <li><b>Olsker Cupcakes |</b></li>
+            <li><a href="index.html">Forside</a></li>
+            <li><a href="order.html">Bestil</a></li>
+            <li><a href="#">Min Profil</a></li>
+            <li><a href="#">Admin</a></li>
+        </ul>
+    </div>
+    <div th:if="${session.currentUser}">
+        <a>Logget ind -</a>
+        <a href="#">Log ud</a>
+    </div>
+    <div th:unless="${session.currentUser}">
+        <a>Ikke logget ind -</a>
+        <a href="#">Log ind</a>
+    </div>
+</div>
+<hr>
+
+<br>
+
+<h1>Log ind</h1>
+<form action="#" method="post">
+    <div class="email-login">
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email" placeholder="Indtast Email" required>
+    </div>
+    <br>
+
+    <div class="password-login">
+    <label for="password">Adgangskode:</label><br>
+    <input type="password" id="password" name="password" placeholder="Indtast Adgangskode" required>
+    </div>
+    <br>
+
+    <button type="submit">Log ind</button>
+
+</form>
+
+<br>
+<hr>
+
+<h1>Opret konto</h1>
+<form action="#" method="post">
+    <div class="reg-email">
+        <label for="reg-email">Email:</label><br>
+        <input type="text" id="reg-email" name="email" placeholder="Indtast Email" required>
+    </div>
+    <br>
+    <div class="reg-password">
+        <label for="reg-password">Adgangskode:</label><br>
+        <input type="password" id="reg-password" name="password" placeholder="Indtast Adgangskode" required>
+    </div>
+    <br>
+    <div class="reg-password-repeat">
+        <label for="reg-password-repeat">Gentag Adgangskode:</label><br>
+        <input type="password" id="reg-password-repeat" name="reg-password" placeholder="Gentag Adgangskode" required>
+    </div>
+    <br>
+    <button type="submit">Opret konto</button>
+</form>
+
+</body>
+</html>
