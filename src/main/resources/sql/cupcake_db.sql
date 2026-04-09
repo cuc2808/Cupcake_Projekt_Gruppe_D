@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.users
     user_id serial NOT NULL,
     username character varying,
     password character varying,
-    balance bigint,
+    balance double precision,
     administrator boolean,
     PRIMARY KEY (user_id)
     );
