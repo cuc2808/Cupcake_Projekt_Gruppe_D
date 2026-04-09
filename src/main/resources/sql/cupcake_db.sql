@@ -1,5 +1,5 @@
 
--- Navn på database SKAL være cupcake_db
+-- Navn på database SKAL være "cupcake_db"
 -- Hvis der kommer nye konstante dataer ind i db, så skal sql script opdateres. Således at alle kan få samme db-data.
 
 BEGIN;
