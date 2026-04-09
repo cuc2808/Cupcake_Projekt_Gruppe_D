@@ -11,19 +11,19 @@
     <div>
         <ul>
             <li><b>Olsker Cupcakes |</b></li>
-            <li><a href="index.html">Forside</a></li>
+            <li><a href="/">Forside</a></li>
             <li><a href="order.html">Bestil</a></li>
-            <li><a href="#">Min Profil</a></li>
-            <li><a href="#">Admin</a></li>
+            <li><a href="#">Min Profil</a></li> <!--mangler-->
+            <li><a href="#">Admin</a></li> <!--mangler-->
         </ul>
     </div>
     <div th:if="${session.currentUser}">
         <a>Logget ind -</a>
-        <a href="#">Log ud</a>
+        <a href="/logout">Log ud</a> <!--mangler-->
     </div>
     <div th:unless="${session.currentUser}">
         <a>Ikke logget ind -</a>
-        <a href="login.html">Log ind</a>
+        <a href="/login">Log ind</a>
     </div>
 </div>
 <hr>
@@ -32,7 +32,7 @@
 
 <h1>Velkommen til Olsker Cupcakes</h1>
 <p>Bestil dine cupcakes online og hent dem i butikken ved Olsker på Bornholm.</p>
-<a href="Order.html">Gå til bestilling</a>
+<a href="order.html">Gå til bestilling</a>
 
 <hr>
 
