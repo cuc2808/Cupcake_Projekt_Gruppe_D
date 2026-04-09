@@ -27,7 +27,7 @@ public class UserMapper {
 
                 return new User(id, username, password, balance, administrator);
             } else {
-                throw new DatabaseException("Fejl i login, prøv igen");
+                throw new DatabaseException("Error with login");
             }
         } catch (SQLException e) {
             throw new DatabaseException("Connection to db dosen't work", e.getMessage());
@@ -46,7 +46,7 @@ public class UserMapper {
             ps.setString(2, password);
             ps.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved oprettelse", e.getMessage());
+            throw new DatabaseException("Error with createUser", e.getMessage());
         }
     }
 }
