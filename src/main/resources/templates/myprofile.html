@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="navigation">
+    <div>
+        <ul>
+            <li><b>Olsker Cupcakes |</b></li>
+            <li><a href="/">Forside</a></li>
+            <li><a href="order.html">Bestil</a></li>
+            <li><a href="myprofile.html">Min Profil</a></li> <!--mangler-->
+            <li><a href="admin.html">Admin</a></li> <!--mangler-->
+        </ul>
+    </div>
+    <div th:if="${session.currentUser}">
+        <a>Logget ind -</a>
+        <a href="/logout">Log ud</a> <!--mangler-->
+    </div>
+    <div th:unless="${session.currentUser}">
+        <a>Ikke logget ind -</a>
+        <a href="/login">Log ind</a>
+    </div>
+</div>
+<hr>
+<br>
+
+<div class="userinfo">
+<h1>Min Profil</h1>
+<p><strong>Email:</strong>
+<span th:text="${user.email}">eksempel@mail.dk</span>
+</p>
+
+<p><strong>Saldo:</strong>
+    <span th:text="${user.balance}">0.00 kr</span>
+</p>
+</div>
+<hr>
+<h2>Mine ordrer</h2>
+<table class="personal-orders">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>User ID</th>
+        <th>Cupcakes</th>
+        <th>Amount</th>
+        <th>Price</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+    <tr th:each="ordrerl : ${orderlines}">
+        <td th:text="${order.order_id}">#000</td>
+        <td th:text="${order.user_id}">#000</td>
+        <td th:text="${orderl.cupcake_name}">:D</td>
+        <td th:text="${orderl.amount}">x</td>
+        <td th:text="${orderl.totalprice}">x.xx kr</td>
+        <td th:text="${order.date}">xx/xx/20xx</td>
+        <td th:text="${ordre.status}">null</td>
+    </tr>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -28,3 +28,75 @@ li {
 .check-bottoms {
     margin-top: 15px;
 }
+
+.admin-orders {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+.personal-orders {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+.admin-users {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: sans-serif;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+}

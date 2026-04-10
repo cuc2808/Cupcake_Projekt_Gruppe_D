@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="navigation">
+    <div>
+        <ul>
+            <li><b>Olsker Cupcakes |</b></li>
+            <li><a href="/">Forside</a></li>
+            <li><a href="order.html">Bestil</a></li>
+            <li><a href="myprofile.html">Min Profil</a></li> <!--mangler-->
+            <li><a href="admin.html">Admin</a></li> <!--mangler-->
+        </ul>
+    </div>
+    <div th:if="${session.currentUser}">
+        <a>Logget ind -</a>
+        <a href="/logout">Log ud</a> <!--mangler-->
+    </div>
+    <div th:unless="${session.currentUser}">
+        <a>Ikke logget ind -</a>
+        <a href="/login">Log ind</a>
+    </div>
+</div>
+<hr>
+<br>
+
+<h1>Admin</h1>
+<p>Her kan du se alle odrer og kunder</p>
+<hr>
+
+<h2>Ordrer</h2>
+<table class="admin-orders">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>User ID</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ordre : ${ordrer}">
+        <td th:text="${ordre.order_id}">#000</td>
+        <td th:text="${ordre.user_id}">#000</td>
+        <td th:text="${ordre.date}">xx/xx/20xx</td>
+        <td th:text="${ordre.status}">null</td>
+    </tr>
+    </tbody>
+</table>
+<hr>
+<br>
+
+<h2>Kunder</h2>
+<table class="admin-users">
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Balance</th>
+        <th>Admin</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.user_id}">#000</td>
+        <td th:text="${user.email}">null</td>
+        <td th:text="${user.balance}">0.0</td>
+        <td th:text="${user.admin}">?</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
