@@ -21,7 +21,7 @@
         </ul>
     </div>
     <div th:if="${session.currentUser}">
-        <a>Logget ind -</a>
+        <span th:text ="${session.currentUser.username}"></span> |
         <a href="/logout">Log ud</a> <!--mangler-->
     </div>
     <div th:unless="${session.currentUser}">
