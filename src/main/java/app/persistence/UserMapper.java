@@ -46,7 +46,7 @@ public class UserMapper {
             ps.setString(1, username);
             ps.setString(2, password);
             ps.executeUpdate();
-            return login(username,password,connectionPool);
+            return login(username,password,connectionPool);//Auto logger
         } catch (SQLException e) {
             throw new DatabaseException("Error with createUser", e.getMessage());
         }
