@@ -17,6 +17,7 @@
         </ul>
     </div>
     <div th:if="${session.currentUser}">
+        <span th:text = "${session.currentUser.username}"></span> |
         <a>Logget ind -</a>
         <a href="/logout">Log ud</a> <!--mangler-->
     </div>
