@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Indkøbskurv</title>
+    <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="navigation">
+    <div>
+        <ul>
+            <li><b>Olsker Cupcakes |</b></li>
+            <li><a th:href="@{/}">Forside</a></li>
+            <li><a th:href="@{/cupcake}">Bestil</a></li>
+            <li><a th:href="@{/cart}">Vis indkøbskurv</a></li>
+            <li><a href="#">Min profil</a></li>
+            <li><a href="#">Admin</a></li>
+        </ul>
+    </div>
+    <div th:if="${session.currentUser}">
+        <span th:text="${session.currentUser.username}"></span>
+        <a href="/logout">Log ud</a>
+    </div>
+</div>
+
+<hr>
+
+<h1>Din indkøbskurv</h1>
+
+<table border="1">
+    <tr>
+        <th>Bund</th>
+        <th>Topping</th>
+        <th>Antal</th>
+        <th>Pris</th>
+        <th>Fjern</th>
+    </tr>
+
+    <tr th:each="line, iterStat : ${cart}">
+        <td th:text="${line.cupcake.bottom.name}">Bund</td>
+        <td th:text="${line.cupcake.top.name}">Top</td>
+        <td th:text="${line.amount}">1</td>
+        <td th:text="${line.totalPrice + ' kr.'}">0</td>
+        <td>
+            <form action="/cart/remove" method="post">
+                <input type="hidden" name="index" th:value="${iterStat.index}" />
+                <button type="submit">Fjern</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<!-- Total -->
+<p>
+    <b>I alt:
+        <span th:text="${total} + ' kr.'">0</span>
+    </b>
+</p>
+
+<p th:if="${session.currentUser != null}">
+    Kontosaldo:
+    <span th:text="${session.currentUser.balance} + ' kr.'">0</span>
+</p>
+
+<p th:if="${session.currentUser != null}">
+    Saldo efter betaling:
+    <span th:text="${session.currentUser.balance - total} + ' kr.'">0</span>
+</p>
+
+<br>
+
+<form action="/checkout" method="post">
+    <button type="submit">Betal med kontosaldo</button>
+</form>
+
+<form action="/cupcake" method="get">
+    <button type="submit">Fortsæt med at handle</button>
+</form>
+
+</body>
+</html>

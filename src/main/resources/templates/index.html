@@ -13,13 +13,13 @@
             <li><b>Olsker Cupcakes |</b></li>
             <li><a href="/">Forside</a></li>
             <li><a href="order.html">Bestil</a></li>
-            <li><a href="myprofile.html">Min Profil</a></li>
-            <li><a href="admin.html">Admin</a></li>
+            <li><a href="#">Min Profil</a></li> <!--mangler-->
+            <li><a href="#">Admin</a></li> <!--mangler-->
         </ul>
     </div>
     <div th:if="${session.currentUser}">
         <a>Logget ind -</a>
-        <a href="/logout">Log ud</a>
+        <a href="/logout">Log ud</a> <!--mangler-->
     </div>
     <div th:unless="${session.currentUser}">
         <a>Ikke logget ind -</a>
@@ -41,7 +41,7 @@
     <p>1. Opret en konto eller log ind</p>
     <p>2. Vælg en bund og topping</p>
     <p>3. Læg i kurven og betal</p>
-    <p>4. Hent din odrer i Olsker</p>
+    <p>4. Hent din odre i Olsker</p>
 </div>
 
 <hr>

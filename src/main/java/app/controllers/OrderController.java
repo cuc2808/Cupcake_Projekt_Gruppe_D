@@ -4,7 +4,9 @@ import app.entities.Bottom;
 import app.entities.OrderLine;
 import app.entities.Top;
 import app.entities.Cupcake;
+import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import java.util.ArrayList;
@@ -14,23 +16,37 @@ public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         // Show site where you "build" cupcake
-        app.get("/cupcake", ctx -> showCupcakePage(ctx, connectionPool));
+        app.get("/order", ctx -> showCupcakePage(ctx, connectionPool));
 
         // Handle when customer presses add to cart
         app.post("/add-to-cart", ctx -> addToCart(ctx));
 
         // Handle payment/order
         app.post("/checkout", ctx -> checkout(ctx, connectionPool));
+
+        app.post("/cart/remove", ctx -> removeFromCart(ctx));
+
+        app.get("/cart", ctx -> showCart(ctx));
     }
 
 
     public static void showCupcakePage(Context ctx, ConnectionPool connectionPool) {
-        List<Top> tops = ctx.sessionAttribute("topList");
-        List<Bottom> bottoms = ctx.sessionAttribute("bottomList");
+        List<Top> tops;
+        try {
+            tops = OrderMapper.getAllTops(connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        List<Bottom> bottoms;
+        try {
+            bottoms = OrderMapper.getAllBottoms(connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException();
+        }
 
         ctx.attribute("tops", tops);
         ctx.attribute("bottoms", bottoms);
-        ctx.render("cupcake.html");
+        ctx.render("order.html");
     }
 
 
@@ -93,6 +109,38 @@ public class OrderController {
             ctx.render("confirmation.html");
         } catch (Exception e) {
             ctx.attribute("msg", "Der skete en fejl under checkout: " + e.getMessage());
+            ctx.render("error.html");
+        }
+    }
+    public static void showCart(Context ctx) {
+        List<OrderLine> cart = ctx.sessionAttribute("cart");
+
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        double total = 0;
+        for (OrderLine line : cart) {
+            total += line.getTotalPrice();
+        }
+
+        ctx.attribute("cart", cart);
+        ctx.attribute("total", total);
+
+        ctx.render("cart.html");
+    }
+
+    public static void removeFromCart(Context ctx) {
+        try {
+            int index = Integer.parseInt(ctx.formParam("index")); // index af linjen i listen
+            List<OrderLine> cart = ctx.sessionAttribute("cart");
+            if (cart != null && index >= 0 && index < cart.size()) {
+                cart.remove(index);
+                ctx.sessionAttribute("cart", cart);
+            }
+            ctx.redirect("/cart"); // gå tilbage til kurven
+        } catch (Exception e) {
+            ctx.attribute("msg", "Fejl ved fjernelse: " + e.getMessage());
             ctx.render("error.html");
         }
     }
