@@ -13,6 +13,9 @@
             <li><b>Olsker Cupcakes |</b></li>
             <li><a href="/">Forside</a></li>
             <li><a href="order.html">Bestil</a></li>
+            <div th:if="${session.currentUser}">
+                <li><a th:href="@{/cart}">Vis indkøbskurv</a></li>
+            </div>
             <li><a href="#">Min Profil</a></li> <!--mangler-->
             <li><a href="#">Admin</a></li> <!--mangler-->
         </ul>
@@ -32,7 +35,12 @@
 
 <h1>Velkommen til Olsker Cupcakes</h1>
 <p>Bestil dine cupcakes online og hent dem i butikken ved Olsker på Bornholm.</p>
-<a href="order.html">Gå til bestilling</a>
+<div th:if="${session.currentUser}">
+    <a href="/order">Gå til bestilling</a>
+</div>
+<div th:unless="${session.currentUser}">
+    <a href="/login">Gå til bestilling</a>
+</div>
 
 <hr>
 
