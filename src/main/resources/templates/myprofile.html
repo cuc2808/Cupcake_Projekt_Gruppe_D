@@ -32,7 +32,7 @@
 <div class="userinfo">
 <h1>Min Profil</h1>
 <p><strong>Email:</strong>
-<span th:text="${user.email}">eksempel@mail.dk</span>
+    <span th:text = "${session.currentUser.username}"></span> |
 </p>
 
 <p><strong>Saldo:</strong>
