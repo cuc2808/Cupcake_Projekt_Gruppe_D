@@ -11,9 +11,9 @@
     <div>
         <ul>
             <li><b>Olsker Cupcakes |</b></li>
-            <li><a th:href="@{/}">Forside</a></li>
-            <li><a th:href="@{/cupcake}">Bestil</a></li>
-            <li><a th:href="@{/cart}">Vis indkøbskurv</a></li>
+            <li><a href="/">Forside</a></li>
+            <li><a href="/order">Bestil</a></li>
+            <li><a href="/cart">Vis indkøbskurv</a></li>
             <li><a href="#">Min profil</a></li>
             <li><a href="#">Admin</a></li>
         </ul>
@@ -76,7 +76,7 @@
     <button type="submit">Betal med kontosaldo</button>
 </form>
 
-<form action="/cupcake" method="get">
+<form action="/order" method="get">
     <button type="submit">Fortsæt med at handle</button>
 </form>
 
