@@ -13,6 +13,9 @@
             <li><b>Olsker Cupcakes |</b></li>
             <li><a href="/">Forside</a></li>
             <li><a href="order.html">Bestil</a></li>
+            <div th:if="${session.currentUser}">
+                <li><a th:href="@{/cart}">Vis indkøbskurv</a></li>
+            </div>
             <li><a href="#">Min Profil</a></li> <!--mangler-->
             <li><a href="#">Admin</a></li> <!--mangler-->
         </ul>

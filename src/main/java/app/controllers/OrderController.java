@@ -23,6 +23,10 @@ public class OrderController {
 
         // Handle payment/order
         app.post("/checkout", ctx -> checkout(ctx, connectionPool));
+
+        app.post("/cart/remove", ctx -> removeFromCart(ctx));
+
+        app.get("/cart", ctx -> showCart(ctx));
     }
 
 
@@ -105,6 +109,38 @@ public class OrderController {
             ctx.render("confirmation.html");
         } catch (Exception e) {
             ctx.attribute("msg", "Der skete en fejl under checkout: " + e.getMessage());
+            ctx.render("error.html");
+        }
+    }
+    public static void showCart(Context ctx) {
+        List<OrderLine> cart = ctx.sessionAttribute("cart");
+
+        if (cart == null) {
+            cart = new ArrayList<>();
+        }
+
+        double total = 0;
+        for (OrderLine line : cart) {
+            total += line.getTotalPrice();
+        }
+
+        ctx.attribute("cart", cart);
+        ctx.attribute("total", total);
+
+        ctx.render("cart.html");
+    }
+
+    public static void removeFromCart(Context ctx) {
+        try {
+            int index = Integer.parseInt(ctx.formParam("index")); // index af linjen i listen
+            List<OrderLine> cart = ctx.sessionAttribute("cart");
+            if (cart != null && index >= 0 && index < cart.size()) {
+                cart.remove(index);
+                ctx.sessionAttribute("cart", cart);
+            }
+            ctx.redirect("/cart"); // gå tilbage til kurven
+        } catch (Exception e) {
+            ctx.attribute("msg", "Fejl ved fjernelse: " + e.getMessage());
             ctx.render("error.html");
         }
     }
