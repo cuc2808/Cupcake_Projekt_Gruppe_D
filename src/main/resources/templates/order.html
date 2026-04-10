@@ -32,28 +32,20 @@
 <p>Vælg en bund og topping, angiv antal og læg i kurven.</p>
 <hr>
 
-<h2>Vælg bund</h2>
-<div class="radio-bottoms">
-    <input type="radio" id="vanilla" name="bottom" value="15">
-    <label for="vanilla">Vanilje - 15kr</label>
-    <br>
-    <input type="radio" id="chocolate" name="bottom" value="15">
-    <label for="chocolate">Chokolade - 15kr</label>
-    <br>
-    <input type="radio" id="lemon" name="bottom" value="18">
-    <label for="lemon">Citron - 18kr</label>
+<h3>Vælg Top</h3>
+<div th:each="top : ${tops}">
+    <input type="radio" name="topId" th:value="${top.topId}">
+    <span th:text="${top.topName}"></span>
+    <span th:text="${top.description}"></span>
+    <span th:text="${top.price}"></span> kr
 </div>
 
-<h2>Vælg topping</h2>
-<div class="radio-tops">
-    <input type="radio" id="Whipped" name="topping" value="10">
-    <label for="whipped">Flødeskum - 10kr</label>
-    <br>
-    <input type="radio" id="strawberry" name="topping" value="12">
-    <label for="strawberry">Jordbær - 12kr</label>
-    <br>
-    <input type="radio" id="lemontop" name="topping" value="10">
-    <label for="lemontop">Citron - 10kr</label>
+<h3>Vælg Bund</h3>
+<div th:each="bottom : ${bottoms}">
+    <input type="radio" name="bottomId" th:value="${bottom.bottomId}">
+    <span th:text="${bottom.bottomName}"></span>
+    <span th:text="${bottom.description}"></span>
+    <span th:text="${bottom.price}"></span> kr
 </div>
 
 <br>
