@@ -43,7 +43,7 @@
 <hr>
 
 <h1>Opret konto</h1>
-<form action="/createUser" method="post">
+<form id = "registerForm" action="/createUser" method="post">
     <div class="reg-email">
         <label for="reg-username">Email:</label><br>
         <input type="email" id="reg-username" name="username" placeholder="Indtast Email" required>
@@ -61,6 +61,6 @@
     <br>
     <button type="submit">Opret konto</button>
 </form>
-<script src="../public/js/validateUser.js"></script>
+<script src="/js/validateUser.js"></script>
 </body>
 </html>
