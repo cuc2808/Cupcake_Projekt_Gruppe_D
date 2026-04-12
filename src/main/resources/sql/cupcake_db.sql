@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.users
     PRIMARY KEY (user_id)
     );
 
+
 CREATE TABLE IF NOT EXISTS public.orders
 (
     order_id serial,
@@ -80,5 +81,11 @@ INSERT INTO tops (top_name, description, price) VALUES ('Rum/Raisin','Rom- og ro
 INSERT INTO tops (top_name, description, price) VALUES ('Orange','Appelsinskiver og zest som topping, frisk og syrlig','8.00');
 INSERT INTO tops (top_name, description, price) VALUES ('Lemon','Citrontopping med syrlig friskhed, perfekt til at løfte smagen','8.00');
 INSERT INTO tops (top_name, description, price) VALUES ('Blue cheese','Intens blåskimmelost som topping, kraftfuld og karakterfuld','9.00');
+
+ALTER TABLE IF EXISTS public.users
+ALTER COLUMN balance SET DEFAULT 0.0;
+
+ALTER TABLE IF EXISTS public.users
+ALTER COLUMN administrator SET DEFAULT false;
 
 END;

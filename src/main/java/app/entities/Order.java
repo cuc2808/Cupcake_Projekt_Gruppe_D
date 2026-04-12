@@ -16,7 +16,7 @@ public class Order {
         this.status = status;
     }
 
-    public Order(String status, int userId, Date date) {
+    public Order(int userId, Date date, String status) {
         this.status = status;
         this.userId = userId;
         this.date = date;

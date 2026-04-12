@@ -15,6 +15,9 @@ public class UserController {
         app.get("/login", ctx -> ctx.render("login.html"));
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
+        app.get("/valid_user", ctx -> isLoggedIn(ctx));
+        app.get("/admin", ctx -> ctx.render("admin.html"));
+        app.get("/profile", ctx -> ctx.render("myprofile.html"));
     }
 
     public static void registerUser(Context ctx, ConnectionPool connectionPool) {
@@ -40,6 +43,13 @@ public class UserController {
         } catch (DatabaseException e) {
             ctx.attribute("msg", e.getMessage());
             ctx.render("login.html");
+        }
+    }
+
+    public static void isLoggedIn(Context ctx) {
+        User currentUser = ctx.sessionAttribute("currentUser");
+        if(currentUser == null) {
+            ctx.redirect("/");
         }
     }
 

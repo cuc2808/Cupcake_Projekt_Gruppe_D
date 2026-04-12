@@ -7,7 +7,7 @@ public class Cupcake {
     private Bottom bottomType;
     private double price;
 
-    public Cupcake(String cupcakeName, Top topType, Bottom bottomType) {
+    public Cupcake(Top topType, Bottom bottomType) {
         this.cupcakeName = bottomType.getBottomName() + " " + topType.getTopName();
         this.topType = topType;
         this.bottomType = bottomType;

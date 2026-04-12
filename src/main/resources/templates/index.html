@@ -7,28 +7,36 @@
 </head>
 
 <body>
+<!-- MENU HTML -->
 <div class="navigation">
     <div>
         <ul>
             <li><b>Olsker Cupcakes |</b></li>
             <li><a href="/">Forside</a></li>
-            <li><a href="/order">Bestil</a></li>
-            <div th:if="${session.currentUser}">
-                <li><a href="/cart">Vis indkøbskurv</a></li>
-            </div>
-            <li><a href="#">Min Profil</a></li> <!--mangler-->
-            <li><a href="#">Admin</a></li> <!--mangler-->
+            <li th:if="${session.currentUser}">
+                <a href="/order">Bestil</a>
+                <a href="/profile">Min Profil</a>
+                <a href="/cart">Vis indkøbskurv</a>
+            </li>
+            <li th:unless="${session.currentUser}">
+                <a href="/login">Bestil</a>
+            </li>
+            <li th:if="${session.currentUser != null and session.currentUser.administrator}">
+                <a href="/admin">Admin</a>
+            </li>
         </ul>
     </div>
     <div th:if="${session.currentUser}">
         <span th:text ="${session.currentUser.username}"></span> |
-        <a href="/logout">Log ud</a> <!--mangler-->
+        <a href="/logout">Log ud</a>
     </div>
     <div th:unless="${session.currentUser}">
         <a>Ikke logget ind -</a>
         <a href="/login">Log ind</a>
     </div>
 </div>
+<!-- MENU HTML -->
+
 <hr>
 
 <br>

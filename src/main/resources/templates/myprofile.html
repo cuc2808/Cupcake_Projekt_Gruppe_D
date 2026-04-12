@@ -6,25 +6,40 @@
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <body>
+<!-- MENU HTML -->
+<div th:unless="${session.currentUser}">
+    <script>
+        window.location.href = '/';
+    </script>
+</div>
 <div class="navigation">
     <div>
         <ul>
             <li><b>Olsker Cupcakes |</b></li>
             <li><a href="/">Forside</a></li>
-            <li><a href="order.html">Bestil</a></li>
-            <li><a href="myprofile.html">Min Profil</a></li>
-            <li><a href="admin.html">Admin</a></li>
+            <li th:if="${session.currentUser}">
+                <a href="/order">Bestil</a>
+                <a href="/profile">Min Profil</a>
+                <a href="/cart">Vis indkøbskurv</a>
+            </li>
+            <li th:unless="${session.currentUser}">
+                <a href="/login">Bestil</a>
+            </li>
+            <li th:if="${session.currentUser != null and session.currentUser.administrator}">
+                <a href="/admin">Admin</a></li>
         </ul>
     </div>
     <div th:if="${session.currentUser}">
         <span th:text ="${session.currentUser.username}"></span> |
-        <a href="/logout">Log ud</a> <!--mangler-->
+        <a href="/logout">Log ud</a>
     </div>
     <div th:unless="${session.currentUser}">
         <a>Ikke logget ind -</a>
         <a href="/login">Log ind</a>
     </div>
 </div>
+<!-- MENU HTML -->
+
 <hr>
 <br>
 
@@ -35,7 +50,7 @@
 </p>
 
 <p><strong>Saldo:</strong>
-    <span th:text="${user.balance}">0.00 kr</span>
+    <span th:text="${session.currentUser.balance}"></span>
 </p>
 </div>
 <hr>

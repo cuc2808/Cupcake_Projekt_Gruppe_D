@@ -7,7 +7,7 @@ public class OrderLine {
     private int amount;
     private double totalPrice;
 
-    public OrderLine(int orderId, Cupcake cupcake, int amount, double totalPrice) {
+    public OrderLine(int orderId, Cupcake cupcake, int amount) {
         this.orderId = orderId;
         this.cupcakeName = cupcake.getCupcakeName();
         this.amount = amount;
