@@ -16,7 +16,6 @@ public class UserController {
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
         app.get("/valid_user", ctx -> isLoggedIn(ctx));
-        app.get("/admin", ctx -> ctx.render("admin.html"));
         app.get("/profile", ctx -> ctx.render("myprofile.html"));
     }
 

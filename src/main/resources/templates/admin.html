@@ -30,7 +30,7 @@
         </ul>
     </div>
     <div th:if="${session.currentUser}">
-        <span th:text ="${session.currentUser.username}"></span> |
+        <span th:text="${session.currentUser.username}"></span> |
         <a href="/logout">Log ud</a>
     </div>
     <div th:unless="${session.currentUser}">
@@ -57,18 +57,18 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ordre : ${ordrer}">
-        <td th:text="${ordre.order_id}">#000</td>
-        <td th:text="${ordre.user_id}">#000</td>
-        <td th:text="${ordre.date}">xx/xx/20xx</td>
-        <td th:text="${ordre.status}">null</td>
+    <tr th:each="Order : ${getAllOrders}">
+        <td th:text="${Order.orderId}"></td>
+        <td th:text="${Order.userId}"></td>
+        <td th:text="${Order.date}"></td>
+        <td th:text="${Order.status}"></td>
     </tr>
     </tbody>
 </table>
 <hr>
 <br>
 
-<h2>Kunder</h2>
+<h2>Brugere</h2>
 <table class="admin-users">
     <thead>
     <tr>
@@ -79,11 +79,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.user_id}">#000</td>
-        <td th:text="${user.email}">null</td>
-        <td th:text="${user.balance}">0.0</td>
-        <td th:text="${user.admin}">?</td>
+    <tr th:each="User : ${getAllUsers}">
+        <td th:text="${User.userId}">#000</td>
+        <td th:text="${User.username}">null</td>
+        <td th:text="${User.balance}">0.0</td>
+        <td th:text="${User.administrator}">?</td>
     </tr>
     </tbody>
 </table>

@@ -174,4 +174,26 @@ public class OrderMapper {
             throw new DatabaseException("Error with editOrder", e.getMessage());
         }
     }
+
+    public static List<Order> getAllOrders(ConnectionPool connectionPool) throws DatabaseException {
+        List<Order> allOrders = new ArrayList<>();
+        String sql = "Select * from orders";
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+        ) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                Date orderDate = rs.getDate("date");
+                int userId = rs.getInt("user_id");
+                String status = rs.getString("status");
+                allOrders.add(new Order(orderId, orderDate, userId, status));
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with getting all orders", e.getMessage());
+        }
+        return allOrders;
+    }
 }
