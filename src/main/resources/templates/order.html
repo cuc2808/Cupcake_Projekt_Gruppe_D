@@ -12,6 +12,7 @@
         window.location.href = '/';
     </script>
 </div>
+<div th:if="${session.currentUser}">
 <div class="navigation">
     <div>
         <ul>
@@ -71,5 +72,6 @@
     <button type="submit">Læg i kurv</button>
 
 </form>
+</div>
 </body>
 </html>

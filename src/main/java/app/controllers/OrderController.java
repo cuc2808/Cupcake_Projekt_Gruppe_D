@@ -13,43 +13,40 @@ import java.util.List;
 public class OrderController {
 
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        // Show site where you "build" cupcake
         app.get("/order", ctx -> orderPage(ctx, connectionPool));
-
-        // Handle when customer presses add to cart
         app.post("/add_to_cart", ctx -> addToCart(ctx, connectionPool));
-
-        // Handle payment/order
         app.post("/checkout", ctx -> checkout(ctx, connectionPool));
-
         app.post("/remove_from_cart", ctx -> removeFromCart(ctx, connectionPool));
-
         app.get("/cart", ctx -> showCart(ctx, connectionPool));
     }
 
     public static void orderChecker(Context ctx, ConnectionPool connectionPool) {
-        Order incompleteOrder = null;
+        if(ctx.sessionAttribute("currentUser") != null) {
+            Order incompleteOrder = null;
 
-        try {
-            List<Order> userOrders = OrderMapper.getAllUsersOrders(connectionPool, ctx);
-            for (Order userOrder : userOrders) {
-                if (userOrder.getStatus().equalsIgnoreCase("draft")) {
-                    incompleteOrder = userOrder;
-                }
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (incompleteOrder == null) {
-            User user = ctx.sessionAttribute("currentUser");
-            int userId = user.getUserId();
-            Order order = new Order(userId, null, "draft");
             try {
-                OrderMapper.createOrder(order, connectionPool);
+                List<Order> userOrders = OrderMapper.getAllUsersOrders(connectionPool, ctx);
+                for (Order userOrder : userOrders) {
+                    if (userOrder.getStatus().equalsIgnoreCase("draft")) {
+                        incompleteOrder = userOrder;
+                    }
+                }
             } catch (DatabaseException e) {
                 throw new RuntimeException(e);
             }
+
+            if (incompleteOrder == null) {
+                User user = ctx.sessionAttribute("currentUser");
+                int userId = user.getUserId();
+                Order order = new Order(userId, null, "draft");
+                try {
+                    OrderMapper.createOrder(order, connectionPool);
+                } catch (DatabaseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else {
+            ctx.redirect("/");
         }
     }
 
@@ -132,6 +129,8 @@ public class OrderController {
         System.out.println(currentBalance);
         double newBalance = currentBalance - totalPrice;
         UserMapper.updateBalance(user.getUserId(),newBalance,connectionPool);
+        user.setBalance(newBalance);
+        ctx.sessionAttribute("currentUser",user);
 
         try {
             order = OrderMapper.getCurrentOrder(connectionPool,ctx);
@@ -149,28 +148,33 @@ public class OrderController {
     }
 
     public static void showCart(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
-        orderChecker(ctx,connectionPool);
-        List<OrderLine> orderLines = OrderMapper.getOrderlines(connectionPool,ctx);
 
-        double totalPrice = 0;
-        for (OrderLine orderLine : orderLines) {
-            totalPrice += orderLine.getTotalPrice();
+        if(ctx.sessionAttribute("currentUser") != null) {
+            orderChecker(ctx, connectionPool);
+            List<OrderLine> orderLines = OrderMapper.getOrderlines(connectionPool, ctx);
+
+            double totalPrice = 0;
+            for (OrderLine orderLine : orderLines) {
+                totalPrice += orderLine.getTotalPrice();
+            }
+
+            User user = ctx.sessionAttribute("currentUser");
+            double balance = user.getBalance();
+            double newSaldo = balance - totalPrice;
+
+            ctx.sessionAttribute("newSaldo", newSaldo);
+            ctx.sessionAttribute("userBalance", balance);
+            ctx.sessionAttribute("totalPrice", totalPrice);
+            ctx.sessionAttribute("orderLinesList", orderLines);
+
+            ctx.attribute("newSaldo", newSaldo);
+            ctx.attribute("userBalance", balance);
+            ctx.attribute("totalPrice", totalPrice);
+            ctx.attribute("orderLinesList", orderLines);
+            ctx.render("cart.html");
+        } else  {
+            ctx.redirect("/");
         }
-
-        User user = ctx.sessionAttribute("currentUser");
-        double balance = user.getBalance();
-        double newSaldo = balance - totalPrice;
-
-        ctx.sessionAttribute("newSaldo", newSaldo);
-        ctx.sessionAttribute("userBalance", balance);
-        ctx.sessionAttribute("totalPrice", totalPrice);
-        ctx.sessionAttribute("orderLinesList", orderLines);
-
-        ctx.attribute("newSaldo", newSaldo);
-        ctx.attribute("userBalance", balance);
-        ctx.attribute("totalPrice", totalPrice);
-        ctx.attribute("orderLinesList", orderLines);
-        ctx.render("cart.html");
     }
 
     public static void removeFromCart(Context ctx, ConnectionPool connectionPool) {

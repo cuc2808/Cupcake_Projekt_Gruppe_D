@@ -12,6 +12,7 @@
         window.location.href = '/';
     </script>
 </div>
+<div th:if="${session.currentUser}">
 <div class="navigation">
     <div>
         <ul>
@@ -81,5 +82,6 @@
     </tr>
     </tbody>
 </table>
+</div>
 </body>
 </html>

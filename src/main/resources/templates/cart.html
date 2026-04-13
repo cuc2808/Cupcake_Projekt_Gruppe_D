@@ -13,6 +13,7 @@
         window.location.href = '/';
     </script>
 </div>
+<div th:if="${session.currentUser}">
 <div class="navigation">
     <div>
         <ul>
@@ -95,6 +96,6 @@
 <form action="/order" method="get">
     <button type="submit">Fortsæt med at handle</button>
 </form>
-
+</div>
 </body>
 </html>
