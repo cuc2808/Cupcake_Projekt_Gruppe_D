@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<title>Frontpage</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- MENU HTML -->
+<div class="navigation">
+    <div>
+        <ul>
+            <li><b>Olsker Cupcakes |</b></li>
+            <li><a href="/">Forside</a></li>
+            <li th:if="${session.currentUser}">
+                <a href="/order">Bestil</a>
+                <a href="/profile">Min Profil</a>
+                <a href="/cart">Vis indkøbskurv</a>
+            </li>
+            <li th:unless="${session.currentUser}">
+                <a href="/login">Bestil</a>
+            </li>
+            <li th:if="${session.currentUser != null and session.currentUser.administrator}">
+                <a href="/admin">Admin</a>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${session.currentUser}">
+        <span th:text ="${session.currentUser.username}"></span> |
+        <a href="/logout">Log ud</a>
+    </div>
+    <div th:unless="${session.currentUser}">
+        <a>Ikke logget ind -</a>
+        <a href="/login">Log ind</a>
+    </div>
+</div>
+<!-- MENU HTML -->
+
+<hr>
+
+<br>
+
+<h1>Velkommen til Olsker Cupcakes</h1>
+<p>Bestil dine cupcakes online og hent dem i butikken ved Olsker på Bornholm.</p>
+<div th:if="${session.currentUser}">
+    <a href="/order">Gå til bestilling</a>
+</div>
+<div th:unless="${session.currentUser}">
+    <a href="/login">Gå til bestilling</a>
+</div>
+
+<hr>
+
+<h2>Sådan fungerer det</h2>
+<div class="howto">
+    <p>1. Opret en konto eller log ind</p>
+    <p>2. Vælg en bund og topping</p>
+    <p>3. Læg i kurven og betal</p>
+    <p>4. Hent din odre i Olsker</p>
+</div>
+
+<hr>
+
+<h2>Om Olsker Cupcakes</h2>
+<p>Vi er et lille økologisk bageri fra Bornholm. Alle cupcakes er håndlavede med lokale råvarer.</p>
+<p>Adresse: Olsker, 3770 Allinge, Bornholm</p>
+
+</body>
+</html>
