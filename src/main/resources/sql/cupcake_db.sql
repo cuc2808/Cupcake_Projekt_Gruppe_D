@@ -97,4 +97,58 @@ ALTER TABLE IF EXISTS public.orderlines
 ALTER TABLE IF EXISTS public.orderlines
     ADD CONSTRAINT orderline_id PRIMARY KEY (orderline_id);
 
+insert into users (username, password, balance) values ('NicolaiNoah@gmail.com','12345', '200.0');
+insert into users (username, password, balance, administrator) values ('NicolaiNoah@admin.com','12345', '1000.0', 'true');
+
+insert into users (username, password, balance) values ('PeterS@gmail.com','12345', '300.0');
+insert into users (username, password, balance, administrator) values ('PeterS@admin.com','12345', '100.0', 'true');
+
+insert into users (username, password, balance) values ('Gabs@gmail.com','12345', '200.0');
+insert into users (username, password, balance, administrator) values ('Gabs@admin.com','12345', '150.0', 'true');
+
+insert into users (username, password, balance) values ('cuc@gmail.com','12345', '200.0');
+insert into users (username, password, balance, administrator) values ('cuc@admin.com','12345', '500.0', 'true');
+
+-- Order for users, with userId 1, 3, 5 and 7
+INSERT INTO orders (user_id, status, date)
+VALUES (1, 'complete', '2026-04-11')
+    RETURNING order_id;
+
+INSERT INTO orderlines (order_id, cupcake_name, amount, total_price)
+VALUES
+    (1, 'Chocolate, Chocolate', 2, 20),
+    (1, 'Vanilla, Chocolate', 1, 10);
+
+
+INSERT INTO orders (user_id, status, date)
+VALUES (3, 'complete', '2026-04-10')
+    RETURNING order_id;
+
+INSERT INTO orderlines (order_id, cupcake_name, amount, total_price)
+VALUES
+    (2, 'Pistacio, Blueberry', 3, 33),
+    (2, 'Vanilla, Lemon', 2, 22);
+
+
+INSERT INTO orders (user_id, status, date)
+VALUES (5, 'complete', '2026-04-13')
+    RETURNING order_id;
+
+INSERT INTO orderlines (order_id, cupcake_name, amount, total_price)
+VALUES
+    (3, 'Almond, Orange', 1, 15),
+    (3, 'Chocolate, Raspberry', 2, 30);
+
+
+INSERT INTO orders (user_id, status, date)
+VALUES (7, 'complete', '2026-04-14')
+    RETURNING order_id;
+
+INSERT INTO orderlines (order_id, cupcake_name, amount, total_price)
+VALUES
+    (4, 'Nutmeg, Strawberry', 2, 22),
+    (4, 'Pistacio, Crispy', 1, 12),
+    (4, 'Pistacio, Blueberry', 2, 22),
+    (4, 'Vanilla, Lemon', 1, 11);
+
 END;
