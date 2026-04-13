@@ -1,9 +1,6 @@
 package app.persistence;
 
-import app.entities.Bottom;
-import app.entities.Order;
-import app.entities.Top;
-import app.entities.User;
+import app.entities.*;
 import app.exceptions.DatabaseException;
 import io.javalin.http.Context;
 
@@ -104,6 +101,77 @@ public class OrderMapper {
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Error with createOrder", e.getMessage());
+        }
+    }
+
+    public static void createOrderLine(OrderLine orderLine, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "INSERT INTO orderlines (order_id, cupcake_name, amount, total_price, price_per) VALUES(?,?,?,?,?)";
+
+        try
+                (
+                        Connection connection = connectionPool.getConnection();
+                        PreparedStatement ps = connection.prepareStatement(sql);
+                ) {
+            ps.setInt(1, orderLine.getOrderId());
+            ps.setString(2, orderLine.getCupcakeName());
+            ps.setInt(3, orderLine.getAmount());
+            ps.setDouble(4, orderLine.getTotalPrice());
+            ps.setDouble(5,orderLine.getPricePer());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with createOrderLine", e.getMessage());
+        }
+    }
+
+    public static List<OrderLine> getOrderlines(ConnectionPool connectionPool, Context ctx) throws DatabaseException {
+        List<OrderLine> orderLines = new ArrayList<>();
+
+        Order order = getCurrentOrder(connectionPool,ctx);
+        int id = order.getOrderId();
+        String sql = "SELECT * FROM orderlines WHERE order_id = " + id;
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                String cupcakeName = rs.getString("cupcake_name");
+                int amount = rs.getInt("amount");
+                String totalPrice = rs.getString("total_price");
+                double pricePer = rs.getDouble("price_per");
+                int orderLineId = rs.getInt("orderline_id");
+                orderLines.add(new OrderLine(orderId, cupcakeName, pricePer, amount, orderLineId));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved hentning af brugerens ordre", e.getMessage());
+        }
+        return orderLines;
+    }
+
+    public static void deleteOrderLine(int id, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "DELETE FROM orderlines WHERE orderline_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with deleteOrderLine", e.getMessage());
+        }
+    }
+
+    public static void completeOrder(int id, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, "complete");
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with editOrder", e.getMessage());
         }
     }
 }

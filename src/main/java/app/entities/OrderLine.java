@@ -6,12 +6,48 @@ public class OrderLine {
     private String cupcakeName;
     private int amount;
     private double totalPrice;
+    private double pricePer;
+    private int orderLineId;
+
 
     public OrderLine(int orderId, Cupcake cupcake, int amount) {
         this.orderId = orderId;
         this.cupcakeName = cupcake.getCupcakeName();
         this.amount = amount;
         this.totalPrice = cupcake.getPrice() * amount;
+    }
+
+    public OrderLine(int orderId, String cupcakeName, double pricePer, int amount, int orderLineId) {
+        this.orderId = orderId;
+        this.cupcakeName = cupcakeName;
+        this.amount = amount;
+        this.pricePer = pricePer;
+        this.totalPrice = pricePer * amount;
+        this.orderLineId = orderLineId;
+    }
+
+    public OrderLine(int orderId, String cupcakeName, double pricePer, int amount) {
+        this.orderId = orderId;
+        this.cupcakeName = cupcakeName;
+        this.amount = amount;
+        this.pricePer = pricePer;
+        this.totalPrice = pricePer * amount;
+    }
+
+    public int getOrderLineId() {
+        return orderLineId;
+    }
+
+    public void setOrderLineId(int orderLineId) {
+        this.orderLineId = orderLineId;
+    }
+
+    public double getPricePer() {
+        return pricePer;
+    }
+
+    public void setPricePer(double pricePer) {
+        this.pricePer = pricePer;
     }
 
     public int getOrderId() {

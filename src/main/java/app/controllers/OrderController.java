@@ -4,10 +4,10 @@ import app.entities.*;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
 import app.persistence.OrderMapper;
+import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderController {
@@ -22,9 +22,9 @@ public class OrderController {
         // Handle payment/order
         app.post("/checkout", ctx -> checkout(ctx, connectionPool));
 
-        app.post("/cart/remove", ctx -> removeFromCart(ctx));
+        app.post("/remove_from_cart", ctx -> removeFromCart(ctx, connectionPool));
 
-        app.get("/cart", ctx -> showCart(ctx));
+        app.get("/cart", ctx -> showCart(ctx, connectionPool));
     }
 
     public static void orderChecker(Context ctx, ConnectionPool connectionPool) {
@@ -105,12 +105,10 @@ public class OrderController {
 
             Cupcake cupcake = new Cupcake(selectedTop, selectedBottom);
             int currentOrderId = OrderMapper.getCurrentOrder(connectionPool, ctx).getOrderId();
-            OrderLine orderLine = new OrderLine(currentOrderId, cupcake, amount);
+            double pricePer = cupcake.getPrice();
+            OrderLine orderLine = new OrderLine(currentOrderId, cupcake.getCupcakeName(), pricePer, amount);
 
-            System.out.println(orderLine.getOrderId());
-            System.out.println(orderLine.getCupcakeName());
-            System.out.println(orderLine.getAmount());
-            System.out.println(orderLine.getTotalPrice());
+            OrderMapper.createOrderLine(orderLine, connectionPool);
 
             ctx.redirect("/cart");
         } catch (Exception e) {
@@ -120,55 +118,69 @@ public class OrderController {
     }
 
 
-    public static void checkout(Context ctx, ConnectionPool connectionPool) {
-        try {
-            List<OrderLine> cart = ctx.sessionAttribute("cart");
-            if (cart == null || cart.isEmpty()) {
-                ctx.attribute("msg", "Kurven er tom!");
-                ctx.render("error.html");
-                return;
-            }
+    public static void checkout(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
-            ctx.sessionAttribute("cart", new ArrayList<OrderLine>());
-
-            ctx.attribute("msg", "Tak for din bestilling!");
-            ctx.render("confirmation.html");
-        } catch (Exception e) {
-            ctx.attribute("msg", "Der skete en fejl under checkout: " + e.getMessage());
-            ctx.render("error.html");
+        User user = ctx.sessionAttribute("currentUser");
+        Order order = null;
+        double totalPrice = 0;
+        List<OrderLine> orderLines = OrderMapper.getOrderlines(connectionPool,ctx);
+        for (OrderLine orderLine : orderLines) {
+            totalPrice += orderLine.getTotalPrice();
         }
+
+        double currentBalance = user.getBalance();
+        System.out.println(currentBalance);
+        double newBalance = currentBalance - totalPrice;
+        UserMapper.updateBalance(user.getUserId(),newBalance,connectionPool);
+
+        try {
+            order = OrderMapper.getCurrentOrder(connectionPool,ctx);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+
+        int id = order.getOrderId();
+        try {
+            OrderMapper.completeOrder(id,connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        ctx.redirect("/");
     }
 
-    public static void showCart(Context ctx) {
-        List<OrderLine> cart = ctx.sessionAttribute("cart");
+    public static void showCart(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+        orderChecker(ctx,connectionPool);
+        List<OrderLine> orderLines = OrderMapper.getOrderlines(connectionPool,ctx);
 
-        if (cart == null) {
-            cart = new ArrayList<>();
+        double totalPrice = 0;
+        for (OrderLine orderLine : orderLines) {
+            totalPrice += orderLine.getTotalPrice();
         }
 
-        double total = 0;
-        for (OrderLine line : cart) {
-            total += line.getTotalPrice();
-        }
+        User user = ctx.sessionAttribute("currentUser");
+        double balance = user.getBalance();
+        double newSaldo = balance - totalPrice;
 
-        ctx.attribute("cart", cart);
-        ctx.attribute("total", total);
+        ctx.sessionAttribute("newSaldo", newSaldo);
+        ctx.sessionAttribute("userBalance", balance);
+        ctx.sessionAttribute("totalPrice", totalPrice);
+        ctx.sessionAttribute("orderLinesList", orderLines);
 
+        ctx.attribute("newSaldo", newSaldo);
+        ctx.attribute("userBalance", balance);
+        ctx.attribute("totalPrice", totalPrice);
+        ctx.attribute("orderLinesList", orderLines);
         ctx.render("cart.html");
     }
 
-    public static void removeFromCart(Context ctx) {
+    public static void removeFromCart(Context ctx, ConnectionPool connectionPool) {
+        int orderLineId = Integer.parseInt(ctx.formParam("selectOrderLineId"));
         try {
-            int index = Integer.parseInt(ctx.formParam("index")); // index af linjen i listen
-            List<OrderLine> cart = ctx.sessionAttribute("cart");
-            if (cart != null && index >= 0 && index < cart.size()) {
-                cart.remove(index);
-                ctx.sessionAttribute("cart", cart);
-            }
-            ctx.redirect("/cart"); // gå tilbage til kurven
-        } catch (Exception e) {
-            ctx.attribute("msg", "Fejl ved fjernelse: " + e.getMessage());
-            ctx.render("error.html");
+            OrderMapper.deleteOrderLine(orderLineId, connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
         }
+
+        ctx.redirect("/cart");
     }
 }

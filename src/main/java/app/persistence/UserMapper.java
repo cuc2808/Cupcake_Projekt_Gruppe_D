@@ -51,4 +51,18 @@ public class UserMapper {
             throw new DatabaseException("Error with createUser", e.getMessage());
         }
     }
+
+    public static void updateBalance(int id, double newSaldo, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "UPDATE users SET balance = ? WHERE user_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setDouble(1, newSaldo);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with updateBalanceAfterPurchase", e.getMessage());
+        }
+    }
 }

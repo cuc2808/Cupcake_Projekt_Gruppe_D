@@ -47,21 +47,20 @@
 
 <table border="1">
     <tr>
-        <th>Bund</th>
-        <th>Topping</th>
+        <th>Cupcake Type</th>
         <th>Antal</th>
         <th>Pris</th>
         <th>Fjern</th>
     </tr>
 
-    <tr th:each="line, iterStat : ${cart}">
-        <td th:text="${line.cupcake.bottom.name}">Bund</td>
-        <td th:text="${line.cupcake.top.name}">Top</td>
-        <td th:text="${line.amount}">1</td>
-        <td th:text="${line.totalPrice + ' kr.'}">0</td>
+    <tr th:each="OrderLine : ${orderLinesList}">
+        <td th:text="${OrderLine.cupcakeName}">Cupcake Type</td>
+        <td th:text="${OrderLine.amount}">1</td>
+        <td th:text="${OrderLine.pricePer + ' kr.'}">0</td>
+        <td th:text="${OrderLine.totalPrice + ' kr.'}">0</td>
         <td>
-            <form action="/cart/remove" method="post">
-                <input type="hidden" name="index" th:value="${iterStat.index}" />
+            <form action="/remove_from_cart" method="post">
+                <input type="hidden" name="selectOrderLineId" th:value="${OrderLine.orderLineId}" />
                 <button type="submit">Fjern</button>
             </form>
         </td>
@@ -73,18 +72,18 @@
 <!-- Total -->
 <p>
     <b>I alt:
-        <span th:text="${total} + ' kr.'">0</span>
+        <span th:text="${totalPrice} + ' kr.'">0</span>
     </b>
 </p>
 
 <p th:if="${session.currentUser != null}">
     Kontosaldo:
-    <span th:text="${session.currentUser.balance} + ' kr.'">0</span>
+    <span th:text="${userBalance} + ' kr.'">0</span>
 </p>
 
 <p th:if="${session.currentUser != null}">
     Saldo efter betaling:
-    <span th:text="${session.currentUser.balance - total} + ' kr.'">0</span>
+    <span th:text="${newSaldo} + ' kr.'">0</span>
 </p>
 
 <br>

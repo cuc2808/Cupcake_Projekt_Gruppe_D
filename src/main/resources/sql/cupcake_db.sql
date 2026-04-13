@@ -88,4 +88,13 @@ ALTER COLUMN balance SET DEFAULT 0.0;
 ALTER TABLE IF EXISTS public.users
 ALTER COLUMN administrator SET DEFAULT false;
 
+
+ALTER TABLE IF EXISTS public.orderlines
+ADD COLUMN price_per double precision;
+
+ALTER TABLE IF EXISTS public.orderlines
+    ADD COLUMN orderline_id bigserial NOT NULL;
+ALTER TABLE IF EXISTS public.orderlines
+    ADD CONSTRAINT orderline_id PRIMARY KEY (orderline_id);
+
 END;
