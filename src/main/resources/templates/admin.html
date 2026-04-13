@@ -79,11 +79,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.user_id}">#000</td>
-        <td th:text="${user.email}">null</td>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.userId}">#000</td>
+        <td th:text="${user.username}">null</td>
         <td th:text="${user.balance}">0.0</td>
-        <td th:text="${user.admin}">?</td>
+        <td th:text="${user.administrator}">?</td>
     </tr>
     </tbody>
 </table>
