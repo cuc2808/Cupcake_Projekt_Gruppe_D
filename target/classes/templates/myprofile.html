@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>My Profile</title>
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <body>
 <!-- MENU HTML -->
-<div th:unless="${session.currentUser && session.currentUser.administrator}">
+<div th:unless="${session.currentUser}">
     <script>
         window.location.href = '/';
     </script>
@@ -30,7 +30,7 @@
         </ul>
     </div>
     <div th:if="${session.currentUser}">
-        <span th:text="${session.currentUser.username}"></span> |
+        <span th:text ="${session.currentUser.username}"></span> |
         <a href="/logout">Log ud</a>
     </div>
     <div th:unless="${session.currentUser}">
@@ -39,51 +39,45 @@
     </div>
 </div>
 <!-- MENU HTML -->
+
 <hr>
 <br>
 
-<h1>Admin</h1>
-<p>Her kan du se alle odrer og kunder</p>
-<hr>
+<div class="userinfo">
+<h1>Min Profil</h1>
+<p><strong>Email:</strong>
+    <span th:text ="${session.currentUser.username}"></span> |
+</p>
 
-<h2>Ordrer</h2>
-<table class="admin-orders">
+<p><strong>Saldo:</strong>
+    <span th:text="${session.currentUser.balance}"></span>
+</p>
+</div>
+<hr>
+<h2>Mine ordrer</h2>
+<table class="personal-orders">
     <thead>
     <tr>
         <th>Order ID</th>
         <th>User ID</th>
+        <th>Cupcakes</th>
+        <th>Amount</th>
+        <th>Price</th>
         <th>Date</th>
         <th>Status</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ordre : ${getAllOrders}">
-        <td th:text="${ordre.order_id}"></td>
-        <td th:text="${ordre.user_id}"></td>
-        <td th:text="${ordre.date}"></td>
-        <td th:text="${ordre.status}"></td>
+    <tr th:each="order : ${orders}">
+    <tr th:each="ordrerl : ${orderlines}">
+        <td th:text="${order.order_id}">#000</td>
+        <td th:text="${order.user_id}">#000</td>
+        <td th:text="${orderl.cupcake_name}">:D</td>
+        <td th:text="${orderl.amount}">x</td>
+        <td th:text="${orderl.totalprice}">x.xx kr</td>
+        <td th:text="${order.date}">xx/xx/20xx</td>
+        <td th:text="${ordre.status}">null</td>
     </tr>
-    </tbody>
-</table>
-<hr>
-<br>
-
-<h2>Kunder</h2>
-<table class="admin-users">
-    <thead>
-    <tr>
-        <th>User ID</th>
-        <th>Email</th>
-        <th>Balance</th>
-        <th>Admin</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${allUsers}">
-        <td th:text="${user.userId}">#000</td>
-        <td th:text="${user.username}">null</td>
-        <td th:text="${user.balance}">0.0</td>
-        <td th:text="${user.administrator}">?</td>
     </tr>
     </tbody>
 </table>

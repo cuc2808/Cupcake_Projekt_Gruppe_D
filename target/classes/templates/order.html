@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>orderpage</title>
     <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
 </head>
 <body>
 <!-- MENU HTML -->
-<div th:unless="${session.currentUser && session.currentUser.administrator}">
+<div th:unless="${session.currentUser}">
     <script>
         window.location.href = '/';
     </script>
@@ -30,7 +30,7 @@
         </ul>
     </div>
     <div th:if="${session.currentUser}">
-        <span th:text="${session.currentUser.username}"></span> |
+        <span th:text ="${session.currentUser.username}"></span> |
         <a href="/logout">Log ud</a>
     </div>
     <div th:unless="${session.currentUser}">
@@ -39,53 +39,37 @@
     </div>
 </div>
 <!-- MENU HTML -->
-<hr>
-<br>
 
-<h1>Admin</h1>
-<p>Her kan du se alle odrer og kunder</p>
 <hr>
 
-<h2>Ordrer</h2>
-<table class="admin-orders">
-    <thead>
-    <tr>
-        <th>Order ID</th>
-        <th>User ID</th>
-        <th>Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="ordre : ${getAllOrders}">
-        <td th:text="${ordre.order_id}"></td>
-        <td th:text="${ordre.user_id}"></td>
-        <td th:text="${ordre.date}"></td>
-        <td th:text="${ordre.status}"></td>
-    </tr>
-    </tbody>
-</table>
+<h1>Bestil cupcakes</h1>
+<p>Vælg en bund og topping, angiv antal og læg i kurven.</p>
 <hr>
-<br>
 
-<h2>Kunder</h2>
-<table class="admin-users">
-    <thead>
-    <tr>
-        <th>User ID</th>
-        <th>Email</th>
-        <th>Balance</th>
-        <th>Admin</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${allUsers}">
-        <td th:text="${user.userId}">#000</td>
-        <td th:text="${user.username}">null</td>
-        <td th:text="${user.balance}">0.0</td>
-        <td th:text="${user.administrator}">?</td>
-    </tr>
-    </tbody>
-</table>
+<form action="/add_to_cart" method="post">
+
+    <h3>Vælg Top</h3>
+    <div th:each="top : ${tops}">
+        <input type="radio" name="topselect" th:value="${top.topId}" required>
+        <span th:text="${top.topName}"></span>
+        <span th:text="${top.description}"></span>
+        <span th:text="${top.price}"></span> kr
+    </div>
+
+    <h3>Vælg Bund</h3>
+    <div th:each="bottom : ${bottoms}">
+        <input type="radio" name="bottomselect" th:value="${bottom.bottomId}" required>
+        <span th:text="${bottom.bottomName}"></span>
+        <span th:text="${bottom.description}"></span>
+        <span th:text="${bottom.price}"></span> kr
+    </div>
+
+    <br>
+    <label for="amount">Antal</label>
+    <input type="number" id="amount" name="amount" value="1" min="1" max="99" required>
+
+    <button type="submit">Læg i kurv</button>
+
+</form>
 </body>
 </html>
