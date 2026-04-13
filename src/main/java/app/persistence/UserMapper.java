@@ -3,7 +3,6 @@ package app.persistence;
 
 import app.entities.User;
 import app.exceptions.DatabaseException;
-import io.javalin.http.Context;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,7 +54,7 @@ public class UserMapper {
         }
     }
 
-    public static List<User> getAllUsers(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    public static List<User> getAllUsers(ConnectionPool connectionPool) throws DatabaseException {
         List<User> userList = new ArrayList<>();
         String sql = "SELECT * FROM users";
 
@@ -67,10 +66,10 @@ public class UserMapper {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("user_id");
-                String email = rs.getString("username");
-                int bal = rs.getInt("balance");
+                String username = rs.getString("username");
+                double bal = rs.getDouble("balance");
                 boolean isAdmin = rs.getBoolean("administrator");
-                userList.add(new User(id, email, "", bal, isAdmin));
+                userList.add(new User(id, username, "", bal, isAdmin));
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error with finding users", e.getMessage());

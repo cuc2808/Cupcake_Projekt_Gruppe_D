@@ -57,11 +57,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="ordre : ${getAllOrders}">
-        <td th:text="${ordre.order_id}"></td>
-        <td th:text="${ordre.user_id}"></td>
-        <td th:text="${ordre.date}"></td>
-        <td th:text="${ordre.status}"></td>
+    <tr th:each="Order : ${getAllOrders}">
+        <td th:text="${Order.orderId}"></td>
+        <td th:text="${Order.userId}"></td>
+        <td th:text="${Order.date}"></td>
+        <td th:text="${Order.status}"></td>
     </tr>
     </tbody>
 </table>
@@ -79,11 +79,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${allUsers}">
-        <td th:text="${user.userId}">#000</td>
-        <td th:text="${user.username}">null</td>
-        <td th:text="${user.balance}">0.0</td>
-        <td th:text="${user.administrator}">?</td>
+    <tr th:each="User : ${getAllUsers}">
+        <td th:text="${User.userId}">#000</td>
+        <td th:text="${User.username}">null</td>
+        <td th:text="${User.balance}">0.0</td>
+        <td th:text="${User.administrator}">?</td>
     </tr>
     </tbody>
 </table>

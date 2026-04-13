@@ -107,7 +107,7 @@ public class OrderMapper {
         }
     }
 
-    public static List<Order> getAllOrders(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
+    public static List<Order> getAllOrders(ConnectionPool connectionPool) throws DatabaseException {
         List<Order> allOrders = new ArrayList<>();
         String sql = "Select * from orders";
         try (

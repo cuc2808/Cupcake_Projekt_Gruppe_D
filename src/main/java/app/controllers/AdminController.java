@@ -16,40 +16,32 @@ import java.util.List;
 
 public class AdminController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
-        app.get("/getAllOrders", ctx -> getAllOrders(ctx,connectionPool));
-
+        app.get("/admin", ctx -> adminPage(ctx, connectionPool));
 
     }
 
-    public static void getAllUsers (Context ctx, ConnectionPool connectionPool) {
-        List<User> allUsers;
-
+    public static void adminPage (Context ctx, ConnectionPool connectionPool) {
          try {
-            allUsers = UserMapper.getAllUsers(ctx, connectionPool);
-             System.out.println("Antal brugere fundet: " + allUsers.size());
-             ctx.attribute("allUsers", allUsers);
+             // User list
+             List<User> getAllUsers = UserMapper.getAllUsers(connectionPool);
+
+             // Order list
+             List<Order> getAllOrders = OrderMapper.getAllOrders(connectionPool);
+
+                 // Users
+                 ctx.attribute("getAllUsers", getAllUsers);
+                 ctx.sessionAttribute("getAllUsers", getAllUsers);
+
+                 // Orders
+                 ctx.attribute("getAllOrders", getAllOrders);
+                 ctx.sessionAttribute("getAllOrders", getAllOrders);
+
+             // render admin
              ctx.render("admin.html");
         } catch (DatabaseException e){
             ctx.attribute("msg",e);
             ctx.render("error.html");
         }
-
-    }
-
-    public static void getAllOrders(Context ctx, ConnectionPool connectionPool) {
-        try {
-            List<Order> getAllOrders = new ArrayList<>(OrderMapper.getAllOrders(ctx, connectionPool));
-            if (getAllOrders == null || getAllOrders.isEmpty()) {
-                ctx.attribute("msg", "No Orders yet");
-                return;
-            }
-            ctx.attribute("getAllOrders",getAllOrders);
-            ctx.render("admin.html");
-        }catch (DatabaseException e){
-            ctx.attribute("msg",e);
-            ctx.render("error.html");
-        }
-
     }
 
 }
