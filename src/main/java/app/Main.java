@@ -33,6 +33,5 @@ public class Main {
         UserController.addRoutes(app, connectionPool);
         OrderController.addRoutes(app, connectionPool);
         AdminController.addRoutes(app,connectionPool);
-        System.out.println(Main.class.getResource("/public"));
     }
 }
