@@ -55,21 +55,47 @@
             <th>User ID</th>
             <th>Date</th>
             <th>Status</th>
+            <th>Cupcake</th>
+            <th>Antal</th>
+            <th>Total pris</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="Order : ${getAllOrders}">
-            <td th:text="${Order.orderId}"></td>
-            <td th:text="${Order.userId}"></td>
-            <td th:text="${Order.date}"></td>
-            <td th:text="${Order.status}"></td>
-        </tr>
-        <tr th:each="OrderLine : ${getAllOrderlines}">
-            <td th:text="${OrderLine.cupcakeName}"></td>
-            <td th:text="${OrderLine.amount}"></td>
-            <td th:text="${OrderLine.totalPrice}"></td>
-        </tr>
+        <th:block th:each="Order : ${getAllOrders}">
 
+            <!-- ORDER -->
+            <tr class="order-row">
+                <td th:text="${Order.orderId}"></td>
+                <td th:text="${Order.userId}"></td>
+                <td th:text="${Order.date}"></td>
+                <td th:text="${Order.status}"></td>
+
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <form action="/deleteOrder" method="post">
+                        <input type="hidden" name="deleteOrderId" th:value="${Order.orderId}" />
+                        <button type="submit">Fjern ordre</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- ORDERLINES -->
+            <th:block th:each="line : ${getAllOrderlines}">
+                <tr th:if="${line.orderId == Order.orderId}" class="orderline-row">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    <td th:text="${line.cupcakeName}"></td>
+                    <td th:text="${line.amount}"></td>
+                    <td th:text="${line.totalPrice}"></td>
+                </tr>
+            </th:block>
+
+        </th:block>
         </tbody>
     </table>
     <hr>

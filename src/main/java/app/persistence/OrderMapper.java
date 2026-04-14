@@ -147,6 +147,29 @@ public class OrderMapper {
         }
         return orderLines;
     }
+    public static void deleteOrder(int id, ConnectionPool connectionPool) throws DatabaseException {
+        String sqlOrderLine = "DELETE FROM orderlines WHERE order_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlOrderLine)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with deleteOrderline", e.getMessage());
+        }
+
+        String sqlOrder = "DELETE FROM orders WHERE order_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlOrder)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with deleteOrder", e.getMessage());
+        }
+    }
 
     public static void deleteOrderLine(int id, ConnectionPool connectionPool) throws DatabaseException {
         String sql = "DELETE FROM orderlines WHERE orderline_id = ?";
