@@ -17,31 +17,40 @@ import java.util.List;
 public class AdminController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/admin", ctx -> adminPage(ctx, connectionPool));
+        app.post("/deleteOrder", ctx -> deleteOrder(ctx, connectionPool));
 
     }
 
-    public static void adminPage (Context ctx, ConnectionPool connectionPool) {
-         try {
-             // User list
-             List<User> getAllUsers = UserMapper.getAllUsers(connectionPool);
+    public static void adminPage(Context ctx, ConnectionPool connectionPool) {
+        try {
+            List<User> getAllUsers = UserMapper.getAllUsers(connectionPool);
+            List<Order> getAllOrders = OrderMapper.getAllOrders(connectionPool);
+            List<OrderLine> getAllOrderlines = OrderMapper.getAllOrderlines(connectionPool);
 
-             // Order list
-             List<Order> getAllOrders = OrderMapper.getAllOrders(connectionPool);
+            ctx.attribute("getAllUsers", getAllUsers);
+            ctx.sessionAttribute("getAllUsers", getAllUsers);
 
-                 // Users
-                 ctx.attribute("getAllUsers", getAllUsers);
-                 ctx.sessionAttribute("getAllUsers", getAllUsers);
+            ctx.attribute("getAllOrders", getAllOrders);
+            ctx.sessionAttribute("getAllOrders", getAllOrders);
 
-                 // Orders
-                 ctx.attribute("getAllOrders", getAllOrders);
-                 ctx.sessionAttribute("getAllOrders", getAllOrders);
+            ctx.attribute("getAllOrderlines", getAllOrderlines);
+            ctx.sessionAttribute("getAllOrderlines", getAllOrderlines);
 
-             // render admin
-             ctx.render("admin.html");
-        } catch (DatabaseException e){
-            ctx.attribute("msg",e);
+            ctx.render("admin.html");
+        } catch (DatabaseException e) {
+            ctx.attribute("msg", e);
             ctx.render("error.html");
         }
     }
 
+    public static void deleteOrder(Context ctx, ConnectionPool connectionPool) {
+        int id = Integer.parseInt(ctx.formParam("deleteOrderId"));
+        try {
+            OrderMapper.deleteOrder(id,connectionPool);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+
+        ctx.redirect("/admin");
+    }
 }

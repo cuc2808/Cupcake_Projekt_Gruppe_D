@@ -13,81 +13,113 @@
     </script>
 </div>
 <div th:if="${session.currentUser && session.currentUser.administrator}">
-<div class="navigation">
-    <div>
-        <ul>
-            <li><b>Olsker Cupcakes |</b></li>
-            <li><a href="/">Forside</a></li>
-            <li th:if="${session.currentUser}">
-                <a href="/order">Bestil</a>
-                <a href="/profile">Min Profil</a>
-                <a href="/cart">Vis indkøbskurv</a>
-            </li>
-            <li th:unless="${session.currentUser}">
-                <a href="/login">Bestil</a>
-            </li>
-            <li th:if="${session.currentUser != null and session.currentUser.administrator}">
-                <a href="/admin">Admin</a></li>
-        </ul>
+    <div class="navigation">
+        <div>
+            <ul>
+                <li><b>Olsker Cupcakes |</b></li>
+                <li><a href="/">Forside</a></li>
+                <li th:if="${session.currentUser}">
+                    <a href="/order">Bestil</a>
+                    <a href="/profile">Min Profil</a>
+                    <a href="/cart">Vis indkøbskurv</a>
+                </li>
+                <li th:unless="${session.currentUser}">
+                    <a href="/login">Bestil</a>
+                </li>
+                <li th:if="${session.currentUser != null and session.currentUser.administrator}">
+                    <a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+        <div th:if="${session.currentUser}">
+            <span th:text="${session.currentUser.username}"></span> |
+            <a href="/logout">Log ud</a>
+        </div>
+        <div th:unless="${session.currentUser}">
+            <a>Ikke logget ind -</a>
+            <a href="/login">Log ind</a>
+        </div>
     </div>
-    <div th:if="${session.currentUser}">
-        <span th:text="${session.currentUser.username}"></span> |
-        <a href="/logout">Log ud</a>
-    </div>
-    <div th:unless="${session.currentUser}">
-        <a>Ikke logget ind -</a>
-        <a href="/login">Log ind</a>
-    </div>
-</div>
-<!-- MENU HTML -->
-<hr>
-<br>
+    <!-- MENU HTML -->
+    <hr>
+    <br>
 
-<h1>Admin</h1>
-<p>Her kan du se alle odrer og kunder</p>
-<hr>
+    <h1>Admin</h1>
+    <p>Her kan du se alle odrer og kunder</p>
+    <hr>
 
-<h2>Ordrer</h2>
-<table class="admin-orders">
-    <thead>
-    <tr>
-        <th>Order ID</th>
-        <th>User ID</th>
-        <th>Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="Order : ${getAllOrders}">
-        <td th:text="${Order.orderId}"></td>
-        <td th:text="${Order.userId}"></td>
-        <td th:text="${Order.date}"></td>
-        <td th:text="${Order.status}"></td>
-    </tr>
-    </tbody>
-</table>
-<hr>
-<br>
+    <h2>Ordrer</h2>
+    <table class="admin-orders">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Cupcake</th>
+            <th>Antal</th>
+            <th>Total pris</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="Order : ${getAllOrders}">
 
-<h2>Brugere</h2>
-<table class="admin-users">
-    <thead>
-    <tr>
-        <th>User ID</th>
-        <th>Email</th>
-        <th>Balance</th>
-        <th>Admin</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="User : ${getAllUsers}">
-        <td th:text="${User.userId}">#000</td>
-        <td th:text="${User.username}">null</td>
-        <td th:text="${User.balance}">0.0</td>
-        <td th:text="${User.administrator}">?</td>
-    </tr>
-    </tbody>
-</table>
+            <!-- ORDER -->
+            <tr class="order-row">
+                <td th:text="${Order.orderId}"></td>
+                <td th:text="${Order.userId}"></td>
+                <td th:text="${Order.date}"></td>
+                <td th:text="${Order.status}"></td>
+
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <form action="/deleteOrder" method="post">
+                        <input type="hidden" name="deleteOrderId" th:value="${Order.orderId}" />
+                        <button type="submit">Fjern ordre</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- ORDERLINES -->
+            <th:block th:each="line : ${getAllOrderlines}">
+                <tr th:if="${line.orderId == Order.orderId}" class="orderline-row">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                    <td th:text="${line.cupcakeName}"></td>
+                    <td th:text="${line.amount}"></td>
+                    <td th:text="${line.totalPrice}"></td>
+                </tr>
+            </th:block>
+
+        </th:block>
+        </tbody>
+    </table>
+    <hr>
+    <br>
+
+    <h2>Brugere</h2>
+    <table class="admin-users">
+        <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Email</th>
+            <th>Balance</th>
+            <th>Admin</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="User : ${getAllUsers}">
+            <td th:text="${User.userId}">#000</td>
+            <td th:text="${User.username}">null</td>
+            <td th:text="${User.balance}">0.0</td>
+            <td th:text="${User.administrator}">?</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

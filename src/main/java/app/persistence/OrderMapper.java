@@ -78,10 +78,10 @@ public class OrderMapper {
 
     public static Order getCurrentOrder(ConnectionPool connectionPool, Context ctx) throws DatabaseException {
         Order currentOrder = null;
-        List<Order> orders = getAllUsersOrders(connectionPool,ctx);
+        List<Order> orders = getAllUsersOrders(connectionPool, ctx);
 
         for (Order order : orders) {
-            if(order.getStatus().equalsIgnoreCase("draft")) {
+            if (order.getStatus().equalsIgnoreCase("draft")) {
                 currentOrder = order;
             }
         }
@@ -117,7 +117,7 @@ public class OrderMapper {
             ps.setString(2, orderLine.getCupcakeName());
             ps.setInt(3, orderLine.getAmount());
             ps.setDouble(4, orderLine.getTotalPrice());
-            ps.setDouble(5,orderLine.getPricePer());
+            ps.setDouble(5, orderLine.getPricePer());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Error with createOrderLine", e.getMessage());
@@ -127,7 +127,7 @@ public class OrderMapper {
     public static List<OrderLine> getOrderlines(ConnectionPool connectionPool, Context ctx) throws DatabaseException {
         List<OrderLine> orderLines = new ArrayList<>();
 
-        Order order = getCurrentOrder(connectionPool,ctx);
+        Order order = getCurrentOrder(connectionPool, ctx);
         int id = order.getOrderId();
         String sql = "SELECT * FROM orderlines WHERE order_id = " + id;
 
@@ -147,6 +147,29 @@ public class OrderMapper {
             throw new DatabaseException("Fejl ved hentning af brugerens ordre", e.getMessage());
         }
         return orderLines;
+    }
+    public static void deleteOrder(int id, ConnectionPool connectionPool) throws DatabaseException {
+        String sqlOrderLine = "DELETE FROM orderlines WHERE order_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlOrderLine)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with deleteOrderline", e.getMessage());
+        }
+
+        String sqlOrder = "DELETE FROM orders WHERE order_id = ?";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlOrder)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error with deleteOrder", e.getMessage());
+        }
     }
 
     public static void deleteOrderLine(int id, ConnectionPool connectionPool) throws DatabaseException {
@@ -199,5 +222,28 @@ public class OrderMapper {
             throw new DatabaseException("Error with getting all orders", e.getMessage());
         }
         return allOrders;
+    }
+
+    public static List<OrderLine> getAllOrderlines(ConnectionPool connectionPool) throws DatabaseException {
+        List<OrderLine> orderLines = new ArrayList<>();
+
+        String sql = "SELECT * FROM orderlines";
+
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int orderId = rs.getInt("order_id");
+                String cupcakeName = rs.getString("cupcake_name");
+                int amount = rs.getInt("amount");
+                String totalPrice = rs.getString("total_price");
+                double pricePer = rs.getDouble("price_per");
+                int orderLineId = rs.getInt("orderline_id");
+                orderLines.add(new OrderLine(orderId, cupcakeName, pricePer, amount, orderLineId));
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Fejl ved hentning af brugerens orderlines", e.getMessage());
+        }
+        return orderLines;
     }
 }
