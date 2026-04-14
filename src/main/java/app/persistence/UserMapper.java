@@ -70,7 +70,7 @@ public class UserMapper {
 
     public static List<User> getAllUsers(ConnectionPool connectionPool) throws DatabaseException {
         List<User> userList = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM users ORDER BY user_id ASC";
 
         try
                 (
@@ -89,5 +89,22 @@ public class UserMapper {
             throw new DatabaseException("Error with finding users", e.getMessage());
         }
         return userList;
+    }
+
+    public static void updateUserInfo (int userId, double balance, boolean isAdmin, ConnectionPool connectionPool) throws DatabaseException {
+        String sql = "UPDATE users SET balance = ?, administrator = ? WHERE user_id = ?";
+
+        try (
+                Connection connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setDouble(1, balance);
+            ps.setBoolean(2, isAdmin);
+            ps.setInt(3, userId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Couldn't update user_info: " + e.getMessage());
+        }
     }
 }
