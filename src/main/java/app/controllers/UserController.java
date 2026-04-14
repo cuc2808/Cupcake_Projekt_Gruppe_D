@@ -21,7 +21,7 @@ public class UserController {
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
         app.get("/valid_user", ctx -> isLoggedIn(ctx));
-        app.get("/profile", ctx -> myProfile(ctx, connectionPool));
+        app.get("/profile", ctx -> showProfile(ctx, connectionPool));
 
     }
 
@@ -63,25 +63,24 @@ public class UserController {
         ctx.redirect("/");
     }
 
-    public static void myProfile(Context ctx, ConnectionPool connectionPool) {
-        isLoggedIn(ctx);
+    public static void showProfile(Context ctx, ConnectionPool connectionPool) {
         User user = ctx.sessionAttribute("currentUser");
-        System.out.println(user.getUserId());
+        int id = user.getUserId();
 
         try {
-            List<Order> getAllUsersOrders = OrderMapper.getAllUsersOrders(connectionPool, ctx);
-            List<OrderLine> getAllUsersOrderLines = OrderMapper.getOrderlines(connectionPool, ctx);
+            List<Order> getAllOrders = OrderMapper.getAllOrdersFromUser(id, connectionPool);
+            List<OrderLine> getAllOrderlines = OrderMapper.getAllOrderlines(connectionPool);
 
-            ctx.attribute("getAllUsersOrders", getAllUsersOrders);
-            ctx.sessionAttribute("getAllUsersOrders", getAllUsersOrders);
+            ctx.attribute("getAllOrders", getAllOrders);
+            ctx.sessionAttribute("getAllOrders", getAllOrders);
 
-            ctx.attribute("getAllUsersOrderlines", getAllUsersOrderLines);
-            ctx.sessionAttribute("getAllUsersOrderlines", getAllUsersOrderLines);
+            ctx.attribute("getAllOrderlines", getAllOrderlines);
+            ctx.sessionAttribute("getAllOrderlines", getAllOrderlines);
 
+            ctx.render("myprofile.html");
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            ctx.attribute("msg", e);
+            ctx.render("error.html");
         }
-        ctx.redirect("myprofile.html");
-
     }
 }
