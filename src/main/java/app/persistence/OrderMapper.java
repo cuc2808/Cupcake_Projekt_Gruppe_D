@@ -8,8 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class OrderMapper {
@@ -162,13 +163,16 @@ public class OrderMapper {
     }
 
     public static void completeOrder(int id, ConnectionPool connectionPool) throws DatabaseException {
-        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+        String sql = "UPDATE orders SET status = ?, date = ? WHERE order_id = ?";
+        LocalDate today = LocalDate.now();
+        Date date = Date.valueOf(today);
 
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, "complete");
-            ps.setInt(2, id);
+            ps.setDate(2, date);
+            ps.setInt(3, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Error with editOrder", e.getMessage());
