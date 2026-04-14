@@ -144,7 +144,7 @@ public class OrderController {
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
-        ctx.redirect("/");
+        ctx.render("checkout.html");
     }
 
     public static void showCart(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
