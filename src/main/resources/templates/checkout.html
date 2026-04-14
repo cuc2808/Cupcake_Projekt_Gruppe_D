@@ -1,0 +1,51 @@
+    <!DOCTYPE html>
+    <html lang="da">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Ordre gennemført</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+    <!-- MENU HTML -->
+    <div th:unless="${session.currentUser}">
+        <script>
+            window.location.href = '/';
+        </script>
+    </div>
+    <div th:if="${session.currentUser}">
+        <div class="navigation">
+            <div>
+                <ul>
+                    <li><b>Olsker Cupcakes |</b></li>
+                    <li><a href="/">Forside</a></li>
+                    <li th:if="${session.currentUser}">
+                        <a href="/order">Bestil</a>
+                        <a href="/profile">Min Profil</a>
+                        <a href="/cart">Vis indkøbskurv</a>
+                    </li>
+                    <li th:unless="${session.currentUser}">
+                        <a href="/login">Bestil</a>
+                    </li>
+                    <li th:if="${session.currentUser != null and session.currentUser.administrator}">
+                        <a href="/admin">Admin</a></li>
+                </ul>
+            </div>
+            <div th:if="${session.currentUser}">
+                <span th:text ="${session.currentUser.username}"></span> |
+                <a href="/logout">Log ud</a>
+            </div>
+            <div th:unless="${session.currentUser}">
+                <a>Ikke logget ind -</a>
+                <a href="/login">Log ind</a>
+            </div>
+        </div>
+        <!-- MENU HTML -->
+    <div class="card">
+        <div class="checkmark">✔</div>
+        <h1>Tillykke!</h1>
+        <p>Din ordre er betalt </p>
+        <a href="/" class="btn">Tilbage til forsiden</a>
+    </div>
+    </body>
+    </html>
