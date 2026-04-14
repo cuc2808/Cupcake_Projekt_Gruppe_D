@@ -56,6 +56,9 @@
 </div>
 <hr>
 <h2>Mine ordrer</h2>
+    <p th:text="${getAllUsersOrders}"></p>
+    <p th:text="${getAllUsersOrderLines}"></p>
+
 <table class="personal-orders">
     <thead>
     <tr>
@@ -69,16 +72,35 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="order : ${orders}">
-    <tr th:each="ordrerl : ${orderlines}">
-        <td th:text="${order.order_id}">#000</td>
-        <td th:text="${order.user_id}">#000</td>
-        <td th:text="${orderl.cupcake_name}">:D</td>
-        <td th:text="${orderl.amount}">x</td>
-        <td th:text="${orderl.totalprice}">x.xx kr</td>
-        <td th:text="${order.date}">xx/xx/20xx</td>
-        <td th:text="${ordre.status}">null</td>
-    </tr>
+    <th:block th:each="Order : ${getAllUsersOrders}">
+
+        <!-- ORDER -->
+        <tr class="order-row">
+            <td th:text="${Order.orderId}"></td>
+            <td th:text="${Order.userId}"></td>
+            <td th:text="${Order.date}"></td>
+            <td th:text="${Order.status}"></td>
+
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <!-- ORDERLINES -->
+        <th:block th:each="line : ${getAllUsersOrderLines}">
+            <tr th:if="${line.orderId == Order.orderId}" class="orderline-row">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td th:text="${line.cupcakeName}"></td>
+                <td th:text="${line.amount}"></td>
+                <td th:text="${line.totalPrice}"></td>
+            </tr>
+        </th:block>
+
+    </th:block>
     </tbody>
 </table>
 </div>

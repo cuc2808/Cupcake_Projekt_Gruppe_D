@@ -1,11 +1,16 @@
 package app.controllers;
 
+import app.entities.Order;
+import app.entities.OrderLine;
 import app.entities.User;
 import app.exceptions.DatabaseException;
 import app.persistence.ConnectionPool;
+import app.persistence.OrderMapper;
 import app.persistence.UserMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+
+import java.util.List;
 
 public class UserController {
 
@@ -16,7 +21,8 @@ public class UserController {
         app.post("/login", ctx -> login(ctx, connectionPool));
         app.get("/logout", ctx -> logout(ctx));
         app.get("/valid_user", ctx -> isLoggedIn(ctx));
-        app.get("/profile", ctx -> ctx.render("myprofile.html"));
+        app.get("/profile", ctx -> myProfile(ctx, connectionPool));
+
     }
 
     public static void registerUser(Context ctx, ConnectionPool connectionPool) {
@@ -47,7 +53,7 @@ public class UserController {
 
     public static void isLoggedIn(Context ctx) {
         User currentUser = ctx.sessionAttribute("currentUser");
-        if(currentUser == null) {
+        if (currentUser == null) {
             ctx.redirect("/");
         }
     }
@@ -55,5 +61,27 @@ public class UserController {
     public static void logout(Context ctx) {
         ctx.req().getSession().invalidate();
         ctx.redirect("/");
+    }
+
+    public static void myProfile(Context ctx, ConnectionPool connectionPool) {
+        isLoggedIn(ctx);
+        User user = ctx.sessionAttribute("currentUser");
+        System.out.println(user.getUserId());
+
+        try {
+            List<Order> getAllUsersOrders = OrderMapper.getAllUsersOrders(connectionPool, ctx);
+            List<OrderLine> getAllUsersOrderLines = OrderMapper.getOrderlines(connectionPool, ctx);
+
+            ctx.attribute("getAllUsersOrders", getAllUsersOrders);
+            ctx.sessionAttribute("getAllUsersOrders", getAllUsersOrders);
+
+            ctx.attribute("getAllUsersOrderlines", getAllUsersOrderLines);
+            ctx.sessionAttribute("getAllUsersOrderlines", getAllUsersOrderLines);
+
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
+        ctx.redirect("myprofile.html");
+
     }
 }

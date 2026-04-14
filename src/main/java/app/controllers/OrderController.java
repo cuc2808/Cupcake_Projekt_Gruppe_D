@@ -18,8 +18,8 @@ public class OrderController {
         app.post("/checkout", ctx -> checkout(ctx, connectionPool));
         app.post("/remove_from_cart", ctx -> removeFromCart(ctx, connectionPool));
         app.get("/cart", ctx -> showCart(ctx, connectionPool));
-    }
 
+    }
     public static void orderChecker(Context ctx, ConnectionPool connectionPool) {
         if(ctx.sessionAttribute("currentUser") != null) {
             Order incompleteOrder = null;
