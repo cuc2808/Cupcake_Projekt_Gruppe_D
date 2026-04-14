@@ -20,26 +20,33 @@ public class AdminController {
 
     }
 
-    public static void adminPage (Context ctx, ConnectionPool connectionPool) {
-         try {
-             // User list
-             List<User> getAllUsers = UserMapper.getAllUsers(connectionPool);
+    public static void adminPage(Context ctx, ConnectionPool connectionPool) {
+        try {
+            // User list
+            List<User> getAllUsers = UserMapper.getAllUsers(connectionPool);
 
-             // Order list
-             List<Order> getAllOrders = OrderMapper.getAllOrders(connectionPool);
+            // Order list
+            List<Order> getAllOrders = OrderMapper.getAllOrders(connectionPool);
 
-                 // Users
-                 ctx.attribute("getAllUsers", getAllUsers);
-                 ctx.sessionAttribute("getAllUsers", getAllUsers);
+            // Orderline list
+            List<OrderLine> getAllOrderlines = OrderMapper.getAllOrderlines(connectionPool);
 
-                 // Orders
-                 ctx.attribute("getAllOrders", getAllOrders);
-                 ctx.sessionAttribute("getAllOrders", getAllOrders);
+            // Users
+            ctx.attribute("getAllUsers", getAllUsers);
+            ctx.sessionAttribute("getAllUsers", getAllUsers);
 
-             // render admin
-             ctx.render("admin.html");
-        } catch (DatabaseException e){
-            ctx.attribute("msg",e);
+            // Orders
+            ctx.attribute("getAllOrders", getAllOrders);
+            ctx.sessionAttribute("getAllOrders", getAllOrders);
+
+            // Orderlines
+            ctx.attribute("getAllOrderlines", getAllOrderlines);
+            ctx.sessionAttribute("getAllOrderlines", getAllOrderlines);
+
+            // render admin
+            ctx.render("admin.html");
+        } catch (DatabaseException e) {
+            ctx.attribute("msg", e);
             ctx.render("error.html");
         }
     }
