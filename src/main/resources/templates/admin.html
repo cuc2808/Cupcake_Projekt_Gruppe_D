@@ -101,25 +101,38 @@
     <hr>
     <br>
 
-    <h2>Brugere</h2>
-    <table class="admin-users">
-        <thead>
-        <tr>
-            <th>User ID</th>
-            <th>Email</th>
-            <th>Balance</th>
-            <th>Admin</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="User : ${getAllUsers}">
-            <td th:text="${User.userId}">#000</td>
-            <td th:text="${User.username}">null</td>
-            <td th:text="${User.balance}">0.0</td>
-            <td th:text="${User.administrator}">?</td>
-        </tr>
-        </tbody>
-    </table>
+<h2>Brugere</h2>
+<table class="admin-users">
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Balance</th>
+        <th>Admin</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="User : ${getAllUsers}">
+        <td th:text="${User.userId}">#000</td>
+        <td th:text="${User.username}">null</td>
+
+        <td colspan="4">
+            <form method="post" action="/updateUser" style="display: flex; justify-content: space-between;">
+                <input type="hidden" name="userId" th:value="${User.userId}">
+
+                <input type="number" step="10.0" min="0.0" name="balance" th:value="${User.balance}">
+
+                <select name="administrator">
+                    <option value="true" th:selected="${User.administrator}">Ja</option>
+                    <option value="false" th:selected="${!User.administrator}">Nej</option>
+                </select>
+
+                <button type="submit">Opdater</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </div>
 </body>
 </html>

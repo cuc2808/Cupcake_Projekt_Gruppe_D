@@ -18,6 +18,7 @@ public class AdminController {
     public static void addRoutes(Javalin app, ConnectionPool connectionPool) {
         app.get("/admin", ctx -> adminPage(ctx, connectionPool));
         app.post("/deleteOrder", ctx -> deleteOrder(ctx, connectionPool));
+        app.post("/updateUser", ctx -> updateUser(ctx, connectionPool));
 
     }
 
@@ -39,6 +40,27 @@ public class AdminController {
             ctx.render("admin.html");
         } catch (DatabaseException e) {
             ctx.attribute("msg", e);
+            ctx.render("error.html");
+        }
+    }
+
+    public static void updateUser (Context ctx, ConnectionPool connectionPool) {
+        try {
+            int userId = Integer.parseInt(ctx.formParam("userId"));
+            double balance = Double.parseDouble(ctx.formParam("balance"));
+            boolean isAdmin = Boolean.parseBoolean(ctx.formParam("administrator"));
+            User currentUser = ctx.sessionAttribute("currentUser");
+            String username = currentUser.getUsername();
+            String password = currentUser.getPassword();
+
+            UserMapper.updateUserInfo(userId, balance, isAdmin, connectionPool);
+            User user = new User(userId, username, password, balance, isAdmin);
+
+            ctx.sessionAttribute("currentUser", user);
+            ctx.redirect("/admin");
+
+        } catch (DatabaseException e) {
+            ctx.attribute("msg", "Failed to update user: " + e.getMessage());
             ctx.render("error.html");
         }
     }
