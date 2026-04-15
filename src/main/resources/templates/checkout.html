@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Ordre gennemført</title>
-        <link rel="stylesheet" href="styles.css">
+        <link href="../public/css/styles.css" th:href="@{/css/styles.css}" rel="stylesheet"/>
     </head>
     <body>
     <!-- MENU HTML -->
@@ -41,11 +41,16 @@
             </div>
         </div>
         <!-- MENU HTML -->
+
+        <hr>
+
     <div class="card">
-        <div class="checkmark">✔</div>
         <h1>Tillykke!</h1>
-        <p>Din ordre er betalt </p>
+        <p>Din ordre er betalt ✔</p>
+        <p>Nu kan du hente din bestilling i butikken når den er klar.</p>
+        <h3>Dit ordre id: <span th:text="${session.purchaseId}"></span></h3>
         <a href="/" class="btn">Tilbage til forsiden</a>
+    </div>
     </div>
     </body>
     </html>

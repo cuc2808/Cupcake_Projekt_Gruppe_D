@@ -139,6 +139,7 @@ public class OrderController {
         }
 
         int id = order.getOrderId();
+        ctx.sessionAttribute("purchaseId",id);
         try {
             OrderMapper.completeOrder(id,connectionPool);
         } catch (DatabaseException e) {
