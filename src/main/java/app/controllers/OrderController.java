@@ -118,7 +118,7 @@ public class OrderController {
     public static void checkout(Context ctx, ConnectionPool connectionPool) throws DatabaseException {
 
         User user = ctx.sessionAttribute("currentUser");
-        Order order = null;
+        Order order;
         double totalPrice = 0;
         List<OrderLine> orderLines = OrderMapper.getOrderlines(connectionPool,ctx);
         for (OrderLine orderLine : orderLines) {
@@ -126,7 +126,6 @@ public class OrderController {
         }
 
         double currentBalance = user.getBalance();
-        System.out.println(currentBalance);
         double newBalance = currentBalance - totalPrice;
         UserMapper.updateBalance(user.getUserId(),newBalance,connectionPool);
         user.setBalance(newBalance);
