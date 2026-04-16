@@ -49,14 +49,18 @@ public class AdminController {
             int userId = Integer.parseInt(ctx.formParam("userId"));
             double balance = Double.parseDouble(ctx.formParam("balance"));
             boolean isAdmin = Boolean.parseBoolean(ctx.formParam("administrator"));
-            User currentUser = ctx.sessionAttribute("currentUser");
-            String username = currentUser.getUsername();
-            String password = currentUser.getPassword();
-
             UserMapper.updateUserInfo(userId, balance, isAdmin, connectionPool);
-            User user = new User(userId, username, password, balance, isAdmin);
 
-            ctx.sessionAttribute("currentUser", user);
+            User currentUser = ctx.sessionAttribute("currentUser");
+            if(userId == currentUser.getUserId()) {
+                String username = currentUser.getUsername();
+                String password = currentUser.getPassword();
+
+                User user = new User(userId, username, password, balance, isAdmin);
+
+                ctx.sessionAttribute("currentUser", user);
+            }
+
             ctx.redirect("/admin");
 
         } catch (DatabaseException e) {
