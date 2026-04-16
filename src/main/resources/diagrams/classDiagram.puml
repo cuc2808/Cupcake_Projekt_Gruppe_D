@@ -1,6 +1,5 @@
 @startuml
 
-' ===== Superklasse =====
 class User {
     -id : int
     -username : String
@@ -8,25 +7,21 @@ class User {
     -email : String
 }
 
-' ===== Subklasser (arver uden dublering) =====
 class Admin
 class Customer
 
 User <|-- Admin
 User <|-- Customer
 
-' ===== Cupcake =====
 class Cupcake {
     -topping : List<Topping>
     -bottom : List<Bottom>
     -int price
 }
 
-' ===== (valgfri hjælpeklasser til tydelighed) =====
 class Topping
 class Bottom
 
-' ===== UserController =====
 class UserController {
     {static} +addRoutes() : void
     {static} +createUser() : void
@@ -34,14 +29,12 @@ class UserController {
     {static} +logout() : void
 }
 
-' ===== UserMapper =====
 class UserMapper {
     {static} +login() : User
     {static} +createUser() : User
     {static} +adminAccess() : User
 }
 
-' ===== Order =====
 class Order {
     -id : int
     -orderStatus : String
@@ -49,34 +42,29 @@ class Order {
     -userId : int
 }
 
-' ===== OrderController =====
 class OrderController {
     {static} +addRoutes() : void
     {static} +createOrder() : void
     {static} +userOrder() : void
 }
 
-' ===== OrderMapper =====
 class OrderMapper {
     {static} +createOrder() : Order
     {static} +userOrder() : Order
     {static} +orderDate() : Order
 }
 
-' ===== ShoppingCart =====
 class ShoppingCart {
     -orderId : int
     -orderDetails : String
     -orderLine : String
 }
 
-' ===== Relationer =====
 UserController --> UserMapper
 OrderController --> OrderMapper
 Order --> User
 ShoppingCart --> Order
 
-' ===== Ny relation: Cupcake i Order =====
 Order "1" --> "*" Cupcake
 
 @enduml
