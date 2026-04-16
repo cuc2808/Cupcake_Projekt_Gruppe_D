@@ -29,7 +29,7 @@ public class OrderMapper {
                 topList.add(new Top(id, name, "", price));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved hentning af toppe", e.getMessage());
+            throw new DatabaseException("Error by getting the tops from database", e.getMessage());
         }
         return topList;
     }
@@ -48,7 +48,7 @@ public class OrderMapper {
                 bottomList.add(new Bottom(id, name, "", price));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved hentning af bunde", e.getMessage());
+            throw new DatabaseException("Error by getting the bottoms from database", e.getMessage());
         }
         return bottomList;
     }
@@ -70,7 +70,7 @@ public class OrderMapper {
                 orders.add(new Order(orderId, date, userId, status));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved hentning af brugerens ordre", e.getMessage());
+            throw new DatabaseException("Error by getting users orders", e.getMessage());
         }
         return orders;
 
@@ -144,7 +144,7 @@ public class OrderMapper {
                 orderLines.add(new OrderLine(orderId, cupcakeName, pricePer, amount, orderLineId));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved hentning af brugerens ordre", e.getMessage());
+            throw new DatabaseException("Error by getting users orderline", e.getMessage());
         }
         return orderLines;
     }
@@ -244,7 +244,7 @@ public class OrderMapper {
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException("Error with getting all orders", e.getMessage());
+            throw new DatabaseException("Error with getting orders from user", e.getMessage());
         }
         return allOrders;
     }
@@ -267,7 +267,7 @@ public class OrderMapper {
                 orderLines.add(new OrderLine(orderId, cupcakeName, pricePer, amount, orderLineId));
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Fejl ved hentning af brugerens orderlines", e.getMessage());
+            throw new DatabaseException("Error by getting all orderlines", e.getMessage());
         }
         return orderLines;
     }
